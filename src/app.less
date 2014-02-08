@@ -1,0 +1,65 @@
+table.table 
+{
+    height:300px;
+    width: 300px;
+    margin: 50px auto auto auto;
+    border: none;
+
+    tbody > tr
+    {
+        td
+        {
+            font-size: 50px;
+            text-align: center;
+            vertical-align: middle;
+            width: 100px;
+            height: 100px;
+        }
+
+        td.clickable
+        {
+            cursor: pointer;
+            background: #fff;
+            &:hover
+            {
+                background: #dcdcdc;
+            }
+        }
+
+        td.winner
+        {
+            color: #f00;
+            //font-size: 54px;
+        }
+    }
+}
+
+#x0y0, 
+#x1y0, 
+#x2y0
+{
+    border-top: none;
+}
+
+#x0y0, 
+#x0y1, 
+#x0y2
+{
+    border-left: none;
+}
+
+
+#x2y0, 
+#x2y1, 
+#x2y2
+{
+    border-right: none;
+}
+
+
+#x0y2, 
+#x1y2, 
+#x2y2
+{
+    border-bottom: none;
+}
