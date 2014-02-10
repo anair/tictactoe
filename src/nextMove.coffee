@@ -4,18 +4,25 @@ NextMove = (gameMatrix, lastAdded) ->
     this.x = 0
     this.o = 0
 
-NextMove.prototype.compareWith = (anotherMove, state) ->
-    if not anotherMove? then return this
+NextMove.prototype.compareWith = (move, state) ->
+    # Compare this move to the one passed in, and return 
+    # the best option for the give state
+    if not move? then return this
 
     toggledState = GameUtils.toggleState state
+
     if this[state] isnt 0
-        if anotherMove[state] is 0 then return this
-        currentScore = anotherMove[toggledState]/anotherMove[state]
-        thisScore = this[toggledState]/this[state]
-        if thisScore < currentScore then return this
+        if move[state] is 0 then return this
+
+        moveScore = move[state]/(move[state] + move[toggledState])
+        thisScore = this[state]/(this[state] + this[toggledState])
+
+        # Return the move that has the higher probabilty of winning
+        if thisScore > moveScore then return this
     else
-        if anotherMove[toggledState] > this[toggledState]
+        if move[state] isnt 0 then return move
+        if move[toggledState] > this[toggledState]
             return this
 
-    return anotherMove
+    return move
 

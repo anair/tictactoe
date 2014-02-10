@@ -23,14 +23,15 @@ head
 body
 
 
-    header.text-center
-        .container
-            .row
-                h1 TIC TAC TOE
+    //- header.text-center
+    //-     .container
+    //-         .row
+    //-             h1 TIC TAC TOE
 
-    .container
+    .container-fluid
         .row
-            table.table.table-bordered
+            i#backButton.fa.fa-arrow-circle-o-left.hideButton
+            table#gameGrid.table.table-bordered
                 tbody
                     tr
                         td#x0y0.clickable

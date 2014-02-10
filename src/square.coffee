@@ -19,6 +19,9 @@ Square.prototype.removeClickHandler = ->
 
 Square.prototype.click = ->
     self = this
+    if $(GameUtils.gameGridId).hasClass(GameUtils.inProgressClass) then return
+    $(GameUtils.gameGridId).addClass GameUtils.inProgressClass
+
     self.aiClick()
     setTimeout ->
         square = GameUtils.matrix.getTheNextBestMove(GameUtils.nextToPlay)
@@ -28,6 +31,7 @@ Square.prototype.click = ->
             square.aiClick()
 
         GameUtils.pushMove self, square
+        $(GameUtils.gameGridId).removeClass GameUtils.inProgressClass
 
     , 1000
 
@@ -35,7 +39,6 @@ Square.prototype.click = ->
 Square.prototype.aiClick = ->
     $square = this.getElement()
     if $square.hasClass GameUtils.clickableClass
-        
         this.removeClickHandler()
         if GameUtils.nextToPlay is "o"
             

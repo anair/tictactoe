@@ -5,6 +5,8 @@ GameUtils = ( ->
     self.clickableClass = "clickable"
     self.oClass = ".fa-circle-o"
     self.xClass = ".fa-times"
+    self.inProgressClass = "inProgress"
+    self.gameGridId = "#gameGrid"
 
     self.nextToPlay = "x"
     self.matrix = null
@@ -15,6 +17,8 @@ GameUtils = ( ->
 
     self.moves = []
 
+    self.$backButton = $("#backButton")
+
     self.initGameMatrix = ->
         self.matrix = new GameMatrix()
         self.matrix.initClickHandlers()
@@ -22,6 +26,10 @@ GameUtils = ( ->
         
         $(window).bind 'hashchange', (e) ->
             self.parseUrl()
+
+
+        self.$backButton.on "click", (e) ->
+            window.history.back()
 
         return
 
@@ -107,6 +115,8 @@ GameUtils = ( ->
         if totalElementsToPop > 0
             self.matrix.unmarkWinners()
 
+        if self.moves.length is 0
+            self.$backButton.addClass "hideButton"
         return
 
     self.pushMove = (square, aiSquare) ->
@@ -129,6 +139,7 @@ GameUtils = ( ->
         }
 
         location.hash = location.hash + "/" + url
+        self.$backButton.removeClass "hideButton"
         return
 
     self.parseUrl = ->

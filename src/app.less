@@ -1,65 +1,179 @@
+// @hover-color: #cc0000;
+// @square-background: #ff0000;
+// @square-background-clickable: #ee0000;
+// @square-border-color: #dd0000;
+
+@hover-color: #004350;
+@square-background: #006579;
+@square-background-clickable: #005363;
+@square-border-color: #008DA8;
+
+@square-winner-font-color: #fff;
+@tranistion-time: 0.3s;
+
+.transition(@attr) {
+    -webkit-transition: @attr @tranistion-time ease-out;  /* Chrome 1-25, Safari 3.2+ */
+       -moz-transition: @attr @tranistion-time ease-out;  /* Firefox 4-15 */
+         -o-transition: @attr @tranistion-time ease-out;  /* Opera 10.50–12.00 */
+            transition: @attr @tranistion-time ease-out;
+}
+
+.multiTransition(@attr1, @attr2) {
+    -webkit-transition: @attr1 @tranistion-time ease-out, @attr2 @tranistion-time ease-out;
+       -moz-transition: @attr1 @tranistion-time ease-out, @attr2 @tranistion-time ease-out;
+         -o-transition: @attr1 @tranistion-time ease-out, @attr2 @tranistion-time ease-out;
+            transition: @attr1 @tranistion-time ease-out, @attr2 @tranistion-time ease-out;
+}
+
+html, body {
+    height: 100%;
+    background: @square-border-color;
+    color: @square-border-color;
+    .transition(color);
+}
+
+.container-fluid
+{
+    min-height: 100%;
+}
+
 table.table 
 {
-    height:300px;
-    width: 300px;
-    margin: 50px auto auto auto;
+    //height:300px;
+    width: auto;
+    margin: -375px auto auto -375px;
     border: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
 
     tbody > tr
     {
         td
         {
-            font-size: 50px;
+            font-size: 125px;
             text-align: center;
             vertical-align: middle;
-            width: 100px;
-            height: 100px;
+            width: 250px;
+            height: 250px;
+            background: @square-background;
+            border-color: @square-border-color;
+            .transition(background);
         }
 
         td.clickable
         {
             cursor: pointer;
-            background: #fff;
+            background: @square-background-clickable;
+            .transition(background);
             &:hover
             {
-                background: #dcdcdc;
+                background: @hover-color;
+                .transition(background);
             }
         }
 
         td.winner
         {
-            color: #f00;
+            .transition(color);
+            color: @square-winner-font-color;
             //font-size: 54px;
         }
     }
 }
 
-#x0y0, 
-#x1y0, 
-#x2y0
+#backButton
 {
-    border-top: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 100px;
+    margin: -50px auto auto -500px;
+    color: @square-background;
+    cursor: pointer;
+    z-index: 1000;
+    .multiTransition(color, font-size);
+
+    &:hover
+    {
+        color: lighten(@square-background, 5%);
+        .multiTransition(color, font-size);
+    }
 }
 
-#x0y0, 
-#x0y1, 
-#x0y2
+#backButton.hideButton
 {
-    border-left: none;
+    font-size: 0px;
+    color: @square-border-color;
+    .multiTransition(color, font-size);
 }
 
 
-#x2y0, 
-#x2y1, 
-#x2y2
+table.inProgress
 {
-    border-right: none;
+    tbody > tr > td.clickable
+    {
+        &:hover
+        {
+            background: @square-background-clickable;
+        }
+    }
+}
+
+@media screen and (max-width: 1200px) {
+
+    #backButton
+    {
+        font-size: 80px;
+        margin: -40px auto auto -405px;
+    }
+
+    table.table
+    {
+        margin: -300px auto auto -300px;
+        tbody > tr > td
+        {
+            font-size: 100px;
+            width: 200px;
+            height: 200px;
+        }
+    }
+}
+
+@media screen and (max-width: 992px) {
+    #backButton
+    {
+        font-size: 60px;
+        margin: -30px auto auto -300px;
+    }
+
+    table.table
+    {
+        margin: -225px auto auto -225px;
+        tbody > tr > td
+        {
+            font-size: 75px;
+            width: 150px;
+            height: 150px;
+        }
+    }
 }
 
 
-#x0y2, 
-#x1y2, 
-#x2y2
-{
-    border-bottom: none;
+@media screen and (max-width: 768px) {
+    #backButton
+    {
+        font-size: 40px;
+        margin: -200px auto auto -150px;
+    }
+    table.table
+    {
+        margin: -150px auto auto -150px;
+        tbody > tr > td
+        {
+            font-size: 50px;
+            width: 100px;
+            height: 100px;
+        }
+    }
 }

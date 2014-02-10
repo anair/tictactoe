@@ -65,8 +65,10 @@ GameMatrix.prototype.getWinningState = ->
 GameMatrix.prototype.getTheNextBestMove = (nextState) ->
     nextMoves = this.getNextMoves nextState
     currentBestMove = null
+    console.log nextMoves
     for nextMove in nextMoves
         currentBestMove = nextMove.compareWith currentBestMove, nextState
+        console.log currentBestMove
 
     if not currentBestMove? then return null
     return currentBestMove.lastAdded
