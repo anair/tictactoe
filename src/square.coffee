@@ -18,13 +18,17 @@ Square.prototype.removeClickHandler = ->
     return
 
 Square.prototype.click = ->
-    this.aiClick()
+    self = this
+    self.aiClick()
     setTimeout ->
         square = GameUtils.matrix.getTheNextBestMove(GameUtils.nextToPlay)
         if square?
             console.log square
             square = GameUtils.matrix.matrix[square.x][square.y]
             square.aiClick()
+
+        GameUtils.pushMove self, square
+
     , 1000
 
 
@@ -53,8 +57,22 @@ Square.prototype.getElement = ->
 
 Square.prototype.initClickHandler = ->
     self = this
+    this.getElement().addClass GameUtils.clickableClass
     this.getElement().on "click", ->
         self.click()
 
 Square.prototype.markWinner = ->
     this.getElement().addClass "winner"
+
+Square.prototype.unmarkWinner = ->
+    this.getElement().removeClass "winner"
+
+Square.prototype.reset = ->
+    this.removeClickHandler()
+    this.state = null
+    $square = this.getElement()
+    $square.removeClass "winner"
+    $square.children(GameUtils.oClass).addClass "hide"
+    $square.children(GameUtils.xClass).addClass "hide"
+    #$square.addClass GameUtils.clickableClass
+

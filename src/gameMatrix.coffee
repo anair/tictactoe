@@ -21,6 +21,24 @@ GameMatrix.prototype.clone = ->
     
     return gameMatrix
 
+GameMatrix.prototype.reset = ->
+    for y in [0..2]
+        for x in [0..2]
+            this.matrix[x][y].reset()
+
+    return
+
+GameMatrix.prototype.unmarkWinners = ->
+    for y in [0..2]
+        for x in [0..2]
+            this.matrix[x][y].unmarkWinner()
+            if not this.matrix[x][y].state?
+                this.matrix[x][y].removeClickHandler()
+                this.matrix[x][y].initClickHandler()
+
+    return
+
+
 GameMatrix.prototype.initClickHandlers = ->
     for y in [0..2]
         for x in [0..2]
