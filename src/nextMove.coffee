@@ -9,6 +9,7 @@ NextMove.prototype.compareWith = (anotherMove, state) ->
 
     toggledState = GameUtils.toggleState state
     if this[state] isnt 0
+        if anotherMove[state] is 0 then return this
         currentScore = anotherMove[toggledState]/anotherMove[state]
         thisScore = this[toggledState]/this[state]
         if thisScore < currentScore then return this

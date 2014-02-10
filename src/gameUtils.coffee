@@ -29,6 +29,7 @@ GameUtils = ( ->
         if self.matrix? then self.matrix.reset()
         self.matrix = new GameMatrix()
         self.matrix.initClickHandlers()
+        self.moves = []
         return
 
     self.toggleNextToPlay = ->
@@ -56,27 +57,36 @@ GameUtils = ( ->
         return winners
 
 
-    self.replay = (move) ->
-        console.log move
+    self.replay = (url) ->
+        console.log url
 
-        if not move?.length? or move.length < 4
+        square = null
+        aiSquare = null
+
+        if not url?.length? or url.length < 4
             return
 
-        x = move.charAt 1
-        y = move.charAt 3
+        x = url.charAt 1
+        y = url.charAt 3
 
         if x <= 2 and y <= 2
             square = self.matrix.matrix[x][y]
             square.aiClick()
 
 
-        if move.length is 8
-            x = move.charAt 5
-            y = move.charAt 7
+        if url.length is 8
+            x = url.charAt 5
+            y = url.charAt 7
 
             if x <= 2 and y <= 2
-                square = self.matrix.matrix[x][y]
-                square.aiClick()
+                aiSquare = self.matrix.matrix[x][y]
+                aiSquare.aiClick()
+
+        self.moves.push  {
+            square: square
+            aiSquare: aiSquare
+            url : url
+        }
 
     self.popMoves = (newLength) ->
         if not newLength? or newLength >= self.moves.length
@@ -153,9 +163,9 @@ GameUtils = ( ->
             self.popMoves newMoves.length
 
         # Otherwise forward the game
-        else
-            for i in [self.moves.length..newMoves.length]
-                self.replay newMoves[i - 1]
+        else if newMoves.length > self.moves.length
+            for i in [self.moves.length..newMoves.length - 1]
+                self.replay newMoves[i]
 
     
     self.initGameFromUrl = ->
