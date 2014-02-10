@@ -99,6 +99,12 @@ GameUtils = ( ->
             url : url
         }
 
+        if self.matrix.isGameOverInADraw()
+            self.rewindBackToStart()
+        else
+            self.showBackButton()
+
+
     self.popMoves = (newLength) ->
         if not newLength? or newLength >= self.moves.length
             return
@@ -119,7 +125,7 @@ GameUtils = ( ->
             self.matrix.unmarkWinners()
 
         if self.moves.length is 0
-            self.$backButton.addClass "hideButton"
+            self.hideBackButton()
         return
 
     self.pushMove = (square, aiSquare) ->
@@ -142,16 +148,22 @@ GameUtils = ( ->
         }
 
         location.hash = location.hash + "/" + url
-        self.$backButton.removeClass "hideButton"
 
         if self.matrix.isGameOverInADraw()
-            self.$backButton.addClass "hideButton"
             self.rewindBackToStart()
+        else
+            self.showBackButton()
 
         return
 
+    self.showBackButton = ->
+        self.$backButton.removeClass "hideButton"
+
+    self.hideBackButton = ->
+        self.$backButton.addClass "hideButton"
 
     self.rewindBackToStart = ->
+        self.hideBackButton()
         setTimeout ->
             $(self.gameGridId).addClass self.inProgressClass
             goBackInHistory = ->
