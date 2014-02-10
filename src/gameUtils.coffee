@@ -143,7 +143,29 @@ GameUtils = ( ->
 
         location.hash = location.hash + "/" + url
         self.$backButton.removeClass "hideButton"
+
+        if self.matrix.isGameOverInADraw()
+            self.$backButton.addClass "hideButton"
+            self.rewindBackToStart()
+
         return
+
+
+    self.rewindBackToStart = ->
+        setTimeout ->
+            $(self.gameGridId).addClass self.inProgressClass
+            goBackInHistory = ->
+                window.history.back()
+
+                if self.moves.length > 1
+                    setTimeout goBackInHistory, 500
+                else
+                    $(self.gameGridId).removeClass self.inProgressClass
+
+            goBackInHistory()
+
+        , 1000        
+
 
     self.parseUrl = ->
         locationHash = location.hash

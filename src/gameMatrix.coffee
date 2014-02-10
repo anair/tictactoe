@@ -10,6 +10,7 @@ GameMatrix = ->
 
     return
 
+
 GameMatrix.prototype.clone = ->
     matrix = [ [], [], [] ]
     for y in [0..2]
@@ -38,7 +39,6 @@ GameMatrix.prototype.unmarkWinners = ->
 
     return
 
-
 GameMatrix.prototype.initClickHandlers = ->
     for y in [0..2]
         for x in [0..2]
@@ -51,6 +51,14 @@ GameMatrix.prototype.removeClickHandlers = ->
         for x in [0..2]
             this.matrix[x][y].removeClickHandler()
     return
+
+GameMatrix.prototype.isGameOverInADraw = ->
+    for y in [0..2]
+        for x in [0..2]
+            if not this.matrix[x][y].state?
+                return false
+
+    return true
 
 GameMatrix.prototype.getWinningState = ->
 
