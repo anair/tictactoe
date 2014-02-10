@@ -23,6 +23,10 @@ Square.prototype.click = ->
     $(GameUtils.gameGridId).addClass GameUtils.inProgressClass
 
     self.aiClick()
+
+    timeToWait = 600
+    if GameUtils.isFirstAiMove() then timeToWait = 300
+
     setTimeout ->
         square = GameUtils.matrix.getTheNextBestMove(GameUtils.nextToPlay)
         if square?
@@ -33,7 +37,7 @@ Square.prototype.click = ->
         GameUtils.pushMove self, square
         $(GameUtils.gameGridId).removeClass GameUtils.inProgressClass
 
-    , 1000
+    , timeToWait
 
 
 Square.prototype.aiClick = ->

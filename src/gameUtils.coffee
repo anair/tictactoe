@@ -51,6 +51,9 @@ GameUtils = ( ->
         if state is "x" then return "o"
         return null
 
+    self.isFirstAiMove = ->
+        return self.moves.length is 0
+
 
     self.plotWinner = ->
         if self.matrix?
