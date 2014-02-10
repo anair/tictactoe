@@ -16,6 +16,16 @@ GameUtils = ( ->
     self.moves = []
 
     self.initGameMatrix = ->
+        self.matrix = new GameMatrix()
+        self.matrix.initClickHandlers()
+        self.initGameFromUrl()
+        
+        $(window).bind 'hashchange', (e) ->
+            self.parseUrl()
+
+        return
+
+    self.resetGameMatrix = ->
         if self.matrix? then self.matrix.reset()
         self.matrix = new GameMatrix()
         self.matrix.initClickHandlers()
@@ -49,14 +59,14 @@ GameUtils = ( ->
     self.replay = (move) ->
         console.log move
 
-        if not move?.length? or move.length >= 4
+        if not move?.length? or move.length < 4
             return
 
         x = move.charAt 1
         y = move.charAt 3
 
         if x <= 2 and y <= 2
-            square = self.matrix[x][y]
+            square = self.matrix.matrix[x][y]
             square.aiClick()
 
 
@@ -65,7 +75,7 @@ GameUtils = ( ->
             y = move.charAt 7
 
             if x <= 2 and y <= 2
-                square = self.matrix[x][y]
+                square = self.matrix.matrix[x][y]
                 square.aiClick()
 
     self.popMoves = (newLength) ->
@@ -111,8 +121,7 @@ GameUtils = ( ->
         location.hash = location.hash + "/" + url
         return
 
-
-    $(window).bind 'hashchange', (e) ->
+    self.parseUrl = ->
         locationHash = location.hash
         if not locationHash? or locationHash is ""
             self.popMoves 0
@@ -120,9 +129,8 @@ GameUtils = ( ->
         locationHash = locationHash.substring(2)
         newMoves = locationHash.split "/"
 
-        console.log newMoves
-        console.log self.moves
 
+        # Check if the internal stack and the url matches up
         mismatch = false
         for i in [0..newMoves.length - 1]
             newPlayerMove = newMoves[i]
@@ -134,24 +142,31 @@ GameUtils = ( ->
 
         # If the move stacks do not align up, replay the entire game
         if mismatch
-            self.initGameMatrix()
-            for newPlayerMove in newMoves
-                self.replay newPlayerMove
-
+            self.resetGameMatrix()
+            for newMove in newMoves
+                self.replay newMove
             return
 
         # If there are more moves on the stack than in the url then
         # rewind the game
         if newMoves.length < self.moves.length
             self.popMoves newMoves.length
+
+        # Otherwise forward the game
         else
             for i in [self.moves.length..newMoves.length]
                 self.replay newMoves[i - 1]
 
+    
+    self.initGameFromUrl = ->
+        locationHash = location.hash
+        if not locationHash? or locationHash is ""
+            return
+        locationHash = locationHash.substring(2)
+        newMoves = locationHash.split "/"
 
-
-
-
+        for newMove in newMoves
+                self.replay newMove
 
     return self
 

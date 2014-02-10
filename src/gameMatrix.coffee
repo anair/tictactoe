@@ -64,10 +64,9 @@ GameMatrix.prototype.getWinningState = ->
 
 GameMatrix.prototype.getTheNextBestMove = (nextState) ->
     nextMoves = this.getNextMoves nextState
-    console.log nextMoves
     currentBestMove = null
     for nextMove in nextMoves
-        currentBestMove = nextMove.getBestMove currentBestMove, nextState
+        currentBestMove = nextMove.compareWith currentBestMove, nextState
 
     if not currentBestMove? then return null
     return currentBestMove.lastAdded
@@ -78,7 +77,6 @@ GameMatrix.prototype.getNextMoves = (nextState) ->
 
     gameMatrix = this
     matrix = this.matrix
-
 
     nextMoves = []
 
@@ -91,10 +89,7 @@ GameMatrix.prototype.getNextMoves = (nextState) ->
                 nextMove.lastAdded.state = nextState
                 nextMoves.push nextMove
 
-
     results = []
-
-
 
     for nextMove in nextMoves
         winningState = nextMove.gameMatrix.getWinningState()
@@ -110,7 +105,6 @@ GameMatrix.prototype.getNextMoves = (nextState) ->
                 return [nextMove]
 
 
-    #console.log nextMoves
     for nextMove in nextMoves
         nextMoveResults = nextMove.gameMatrix.getNextMoves(GameUtils.toggleState(nextState))
 
@@ -124,8 +118,6 @@ GameMatrix.prototype.getNextMoves = (nextState) ->
         nextMove.x = x
         nextMove.o = o
         results.push nextMove
-
-    # Get rid of the lowest states
 
     return results
 

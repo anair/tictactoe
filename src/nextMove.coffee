@@ -4,7 +4,7 @@ NextMove = (gameMatrix, lastAdded) ->
     this.x = 0
     this.o = 0
 
-NextMove.prototype.getBestMove = (anotherMove, state) ->
+NextMove.prototype.compareWith = (anotherMove, state) ->
     if not anotherMove? then return this
 
     toggledState = GameUtils.toggleState state
