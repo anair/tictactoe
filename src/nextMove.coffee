@@ -8,7 +8,6 @@ NextMove.prototype.compareWith = (move, state) ->
     # Compare this move to the one passed in, and return 
     # the best option for the give state
     if not move? then return this
-
     toggledState = GameUtils.toggleState state
 
     if this[state] isnt 0
@@ -23,6 +22,5 @@ NextMove.prototype.compareWith = (move, state) ->
         if move[state] isnt 0 then return move
         if move[toggledState] > this[toggledState]
             return this
-
     return move
 

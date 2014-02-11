@@ -1,7 +1,4 @@
 $ ->
     GameUtils.initGameMatrix()
+    return
 
-
-
-
-    

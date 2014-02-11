@@ -29,8 +29,8 @@ GameUtils = ( ->
 
 
         self.$backButton.on "click", (e) ->
-            window.history.back()
-
+            if self.moves.length > 0
+                window.history.back()
         return
 
     self.resetGameMatrix = ->
@@ -45,6 +45,7 @@ GameUtils = ( ->
             self.nextToPlay = "x"
         else
             self.nextToPlay = "o"
+        return
 
     self.toggleState = (state) ->
         if state is "o" then return "x"
@@ -54,29 +55,24 @@ GameUtils = ( ->
     self.isFirstAiMove = ->
         return self.moves.length is 0
 
+    self.getTimeToWaitBetweenMoves = ->
+        if self.isFirstAiMove() then return 300
+        return 600
 
     self.plotWinner = ->
         if self.matrix?
             winners = self.matrix.getWinners()
-            
             if winners?
                 for winner in winners
                     winner.markWinner()
-
                 self.matrix.removeClickHandlers()
-
         return winners
 
-
     self.replay = (url) ->
-        console.log url
+        if not url?.length? or url.length < 4 then return
 
         square = null
         aiSquare = null
-
-        if not url?.length? or url.length < 4
-            return
-
         x = url.charAt 1
         y = url.charAt 3
 
@@ -99,11 +95,13 @@ GameUtils = ( ->
             url : url
         }
 
-        if self.matrix.isGameOverInADraw()
+        if self.matrix.winners?
+            self.rewindBackToStart(1400)
+        else if self.matrix.isGameOverInADraw()
             self.rewindBackToStart()
         else
             self.showBackButton()
-
+        return
 
     self.popMoves = (newLength) ->
         if not newLength? or newLength >= self.moves.length
@@ -149,20 +147,24 @@ GameUtils = ( ->
 
         location.hash = location.hash + "/" + url
 
-        if self.matrix.isGameOverInADraw()
+        if self.matrix.winners?
+            self.rewindBackToStart(1400)
+        else if self.matrix.isGameOverInADraw()
             self.rewindBackToStart()
         else
             self.showBackButton()
-
         return
 
     self.showBackButton = ->
         self.$backButton.removeClass "hideButton"
+        return
 
     self.hideBackButton = ->
         self.$backButton.addClass "hideButton"
+        return
 
-    self.rewindBackToStart = ->
+    self.rewindBackToStart = (time) ->
+        if not time? then time = 1000
         self.hideBackButton()
         setTimeout ->
             $(self.gameGridId).addClass self.inProgressClass
@@ -170,13 +172,14 @@ GameUtils = ( ->
                 window.history.back()
 
                 if self.moves.length > 1
-                    setTimeout goBackInHistory, 500
+                    setTimeout goBackInHistory, time/2
                 else
                     $(self.gameGridId).removeClass self.inProgressClass
 
             goBackInHistory()
 
-        , 1000        
+        , time
+        return
 
 
     self.parseUrl = ->
@@ -214,6 +217,7 @@ GameUtils = ( ->
         else if newMoves.length > self.moves.length
             for i in [self.moves.length..newMoves.length - 1]
                 self.replay newMoves[i]
+        return
 
     
     self.initGameFromUrl = ->
@@ -225,6 +229,7 @@ GameUtils = ( ->
 
         for newMove in newMoves
                 self.replay newMove
+        return
 
     return self
 

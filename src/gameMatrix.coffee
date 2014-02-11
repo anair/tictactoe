@@ -1,4 +1,3 @@
-
 GameMatrix = ->
     this.matrix = [ [], [], [] ]
     this.winnerState = null
@@ -7,9 +6,7 @@ GameMatrix = ->
     for y in [0..2]
         for x in [0..2]
             this.matrix[x][y] = new Square(x, y)
-
     return
-
 
 GameMatrix.prototype.clone = ->
     matrix = [ [], [], [] ]
@@ -19,14 +16,12 @@ GameMatrix.prototype.clone = ->
     
     GameMatrix gameMatrix = new GameMatrix()
     gameMatrix.matrix = matrix
-    
     return gameMatrix
 
 GameMatrix.prototype.reset = ->
     for y in [0..2]
         for x in [0..2]
             this.matrix[x][y].reset()
-
     return
 
 GameMatrix.prototype.unmarkWinners = ->
@@ -36,14 +31,12 @@ GameMatrix.prototype.unmarkWinners = ->
             if not this.matrix[x][y].state?
                 this.matrix[x][y].removeClickHandler()
                 this.matrix[x][y].initClickHandler()
-
     return
 
 GameMatrix.prototype.initClickHandlers = ->
     for y in [0..2]
         for x in [0..2]
             this.matrix[x][y].initClickHandler()
-
     return
 
 GameMatrix.prototype.removeClickHandlers = ->
@@ -57,11 +50,9 @@ GameMatrix.prototype.isGameOverInADraw = ->
         for x in [0..2]
             if not this.matrix[x][y].state?
                 return false
-
     return true
 
 GameMatrix.prototype.getWinningState = ->
-
     winners = this.getWinners()
     if winners? and winners.length is 3
         winnerState = winners[0].state
@@ -73,21 +64,16 @@ GameMatrix.prototype.getWinningState = ->
 GameMatrix.prototype.getTheNextBestMove = (nextState) ->
     nextMoves = this.getNextMoves nextState
     currentBestMove = null
-    console.log nextMoves
     for nextMove in nextMoves
         currentBestMove = nextMove.compareWith currentBestMove, nextState
-        console.log currentBestMove
 
     if not currentBestMove? then return null
     return currentBestMove.lastAdded
-                
 
 
 GameMatrix.prototype.getNextMoves = (nextState) ->
-
     gameMatrix = this
     matrix = this.matrix
-
     nextMoves = []
 
     for y in [0..2]
@@ -99,53 +85,42 @@ GameMatrix.prototype.getNextMoves = (nextState) ->
                 nextMove.lastAdded.state = nextState
                 nextMoves.push nextMove
 
-    results = []
+                # If this is a winning move, then all the other moves don't matter..
+                winningState = nextMove.gameMatrix.getWinningState()
+                if winningState?
 
-    for nextMove in nextMoves
-        winningState = nextMove.gameMatrix.getWinningState()
-        if winningState?
+                    if winningState is "x"
+                        nextMove.x = 1
+                        nextMove.o = 0
+                        return [nextMove]
+                    else
+                        nextMove.x = 0
+                        nextMove.o = 1
+                        return [nextMove]
+                else
+                    nextMoveResults = nextMove.gameMatrix.getNextMoves(GameUtils.toggleState(nextState))
 
-            if winningState is "x"
-                nextMove.x = 1
-                nextMove.o = 0
-                return [nextMove]
-            else
-                nextMove.x = 0
-                nextMove.o = 1
-                return [nextMove]
+                    x = 0
+                    o = 0
+                    for nextMoveResult in nextMoveResults
+                        # For each level you go deeper, the weight of a win halves
+                        x = nextMoveResult.x/2 + x
+                        o = nextMoveResult.o/2 + o
 
+                    nextMove.x = x
+                    nextMove.o = o
 
-    for nextMove in nextMoves
-        nextMoveResults = nextMove.gameMatrix.getNextMoves(GameUtils.toggleState(nextState))
-
-        x = 0
-        o = 0
-        for nextMoveResult in nextMoveResults
-            x = nextMoveResult.x/2 + x
-            o = nextMoveResult.o/2 + o
-
-
-        nextMove.x = x
-        nextMove.o = o
-        results.push nextMove
-
-    return results
-
-
+    return nextMoves
 
 GameMatrix.prototype.getWinners = ->
 
     isMatch = (square1, square2, square3) ->
         if not square1 or not square2 or not square3 then return false
-
         if square1.state is "x" and square2.state is "x" and square3.state is "x"
             return true
-
         if square1.state is "o" and square2.state is "o" and square3.state is "o"
             return true
-
         return false
-        
 
     matrix = this.matrix
     winners = null

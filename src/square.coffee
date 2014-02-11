@@ -1,10 +1,8 @@
 Square = (x, y)->
-
     self = this
     self.x = x
     self.y  = y
     self.state = null
-
     return
 
 Square.prototype.clone = ->
@@ -23,14 +21,10 @@ Square.prototype.click = ->
     $(GameUtils.gameGridId).addClass GameUtils.inProgressClass
 
     self.aiClick()
-
-    timeToWait = 600
-    if GameUtils.isFirstAiMove() then timeToWait = 300
-
+    timeToWait = GameUtils.getTimeToWaitBetweenMoves()
     setTimeout ->
         square = GameUtils.matrix.getTheNextBestMove(GameUtils.nextToPlay)
         if square?
-            console.log square
             square = GameUtils.matrix.matrix[square.x][square.y]
             square.aiClick()
 
@@ -38,7 +32,7 @@ Square.prototype.click = ->
         $(GameUtils.gameGridId).removeClass GameUtils.inProgressClass
 
     , timeToWait
-
+    return
 
 Square.prototype.aiClick = ->
     $square = this.getElement()
@@ -56,23 +50,25 @@ Square.prototype.aiClick = ->
             this.state = "x"
 
     GameUtils.plotWinner()
-
+    return
 
 Square.prototype.getElement = ->
     return $("#x#{this.x}y#{this.y}")
-
 
 Square.prototype.initClickHandler = ->
     self = this
     this.getElement().addClass GameUtils.clickableClass
     this.getElement().on "click", ->
         self.click()
+    return
 
 Square.prototype.markWinner = ->
     this.getElement().addClass "winner"
+    return
 
 Square.prototype.unmarkWinner = ->
     this.getElement().removeClass "winner"
+    return
 
 Square.prototype.reset = ->
     this.removeClickHandler()
@@ -81,5 +77,4 @@ Square.prototype.reset = ->
     $square.removeClass "winner"
     $square.children(GameUtils.oClass).addClass "hide"
     $square.children(GameUtils.xClass).addClass "hide"
-    #$square.addClass GameUtils.clickableClass
-
+    return
