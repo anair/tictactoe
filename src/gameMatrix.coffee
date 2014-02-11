@@ -13,7 +13,6 @@ GameMatrix.prototype.clone = ->
     for y in [0..2]
         for x in [0..2]
             matrix[x][y] = this.matrix[x][y].clone()
-    
     GameMatrix gameMatrix = new GameMatrix()
     gameMatrix.matrix = matrix
     return gameMatrix

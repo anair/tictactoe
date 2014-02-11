@@ -39,12 +39,10 @@ Square.prototype.aiClick = ->
     if $square.hasClass GameUtils.clickableClass
         this.removeClickHandler()
         if GameUtils.nextToPlay is "o"
-            
             $square.children(GameUtils.oClass).removeClass "hide"
             GameUtils.toggleNextToPlay()
             this.state = "o"
         else
-            
             $square.children(GameUtils.xClass).removeClass "hide"
             GameUtils.toggleNextToPlay()
             this.state = "x"
